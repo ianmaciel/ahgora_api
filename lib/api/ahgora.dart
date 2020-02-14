@@ -23,11 +23,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import 'package:ahgora_api/model/ahgora_exceptions.dart';
 import 'package:ahgora_api/model/day.dart';
 import 'package:ahgora_api/model/monthly_report.dart';
-import 'package:intl/intl.dart';
 
 class Ahgora {
   static const String _ahgoraAddress = 'https://www.ahgora.com.br';
@@ -35,6 +35,7 @@ class Ahgora {
   String password;
   String companyId;
   String _jwt;
+  String get jwt => _jwt;
 
   String get _api => '$_ahgoraAddress/api-espelho/apuracao';
   String get _loginAddress => '$_ahgoraAddress/externo/login';
