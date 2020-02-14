@@ -21,3 +21,9 @@
 // SOFTWARE.
 
 export 'api/ahgora.dart';
+export 'model/ahgora_exceptions.dart';
+export 'model/clock_time.dart';
+export 'model/day.dart';
+export 'model/employee.dart';
+export 'model/hour_summary.dart';
+export 'model/monthly_report.dart';
