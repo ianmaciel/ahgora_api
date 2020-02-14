@@ -30,7 +30,7 @@ import 'package:ahgora_api/model/monthly_report.dart';
 import 'package:intl/intl.dart';
 
 class Ahgora {
-  static const _ahgoraAddress = 'https://www.ahgora.com.br';
+  static const String _ahgoraAddress = 'https://www.ahgora.com.br';
   int userId;
   String password;
   String companyId;
@@ -40,7 +40,7 @@ class Ahgora {
   String get _loginAddress => '$_ahgoraAddress/externo/login';
   bool get isLoggedIn => _jwt != null && _jwt.isNotEmpty;
 
-  Map<String, String> _headers = {
+  final Map<String, String> _headers = <String, String>{
     'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
   };
 
@@ -51,7 +51,7 @@ class Ahgora {
 
     http.Response response = await http.post(_loginAddress,
         body:
-            "empresa=$companyId&origin=portal&matricula=$userId&senha=$password",
+            'empresa=$companyId&origin=portal&matricula=$userId&senha=$password',
         headers: _headers);
 
     if (response.body.isNotEmpty) {
@@ -91,7 +91,7 @@ class Ahgora {
       throw InexistentSession();
     }
 
-    final DateFormat dateFormat = DateFormat("yyyy-MM");
+    final DateFormat dateFormat = DateFormat('yyyy-MM');
 
     MonthlyReport monthlyReport =
         await _fetchMonthlyReport(dateFormat.format(dateTime));
@@ -113,7 +113,7 @@ class Ahgora {
     }
 
     // Remove days without timestamps (most likely non business days).
-    monthlyReport.days.removeWhere((Day day) => day.clockTimes.length == 0);
+    monthlyReport.days.removeWhere((Day day) => day.clockTimes.isEmpty);
     return monthlyReport;
   }
 
