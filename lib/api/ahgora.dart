@@ -37,6 +37,7 @@ class Ahgora {
   String _jwt;
   DateTime _expirationDate;
   String get jwt => _jwt;
+  set jwt(String value) => _jwt = value;
   DateTime get expirationDate => _expirationDate;
 
   String get _api => '$_ahgoraAddress/api-espelho/apuracao';
