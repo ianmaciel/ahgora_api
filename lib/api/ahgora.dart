@@ -34,6 +34,7 @@ class Ahgora {
   int userId;
   String password;
   String companyId;
+  DateTime expirationDate;
   String _rawJwt;
   DateTime _expirationDate;
   String get jwt => _rawJwt;
@@ -41,8 +42,6 @@ class Ahgora {
     _rawJwt = value;
     _headers['cookie'] = 'qwert-external=$_rawJwt';
   }
-
-  DateTime get expirationDate => _expirationDate;
 
   String get _api => '$_ahgoraAddress/api-espelho/apuracao';
   String get _loginAddress => '$_ahgoraAddress/externo/login';
@@ -67,14 +66,14 @@ class Ahgora {
       if (body['r'] == 'success') {
         jwt = body['jwt'];
 
-        _getJwtExpirationDate(response.headers['set-cookie']);
+        _parseJwtExpirationDate(response.headers['set-cookie']);
         return true;
       }
     }
     return false;
   }
 
-  void _getJwtExpirationDate(String cookie) {
+  void _parseJwtExpirationDate(String cookie) {
     List<String> keys = cookie.split('; ');
     String expires =
         keys.firstWhere((String element) => element.startsWith('expires='));
@@ -85,7 +84,7 @@ class Ahgora {
       'expires='.length,
     );
     final DateFormat dateFormat = DateFormat('EEE, dd-MMM-yyyy HH:mm:ss zzz');
-    _expirationDate = dateFormat.parseUtc(expires);
+    expirationDate = dateFormat.parseUtc(expires);
   }
 
   ///
