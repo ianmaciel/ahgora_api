@@ -34,15 +34,19 @@ class Ahgora {
   int userId;
   String password;
   String companyId;
-  String _jwt;
+  String _rawJwt;
   DateTime _expirationDate;
-  String get jwt => _jwt;
-  set jwt(String value) => _jwt = value;
+  String get jwt => _rawJwt;
+  set jwt(String value) {
+    _rawJwt = value;
+    _headers['cookie'] = 'qwert-external=$_rawJwt';
+  }
+
   DateTime get expirationDate => _expirationDate;
 
   String get _api => '$_ahgoraAddress/api-espelho/apuracao';
   String get _loginAddress => '$_ahgoraAddress/externo/login';
-  bool get isLoggedIn => _jwt != null && _jwt.isNotEmpty;
+  bool get isLoggedIn => jwt != null && jwt.isNotEmpty;
 
   final Map<String, String> _headers = <String, String>{
     'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -61,8 +65,7 @@ class Ahgora {
     if (response.body.isNotEmpty) {
       Map<String, dynamic> body = json.decode(response.body);
       if (body['r'] == 'success') {
-        _jwt = body['jwt'];
-        _headers['cookie'] = 'qwert-external=$_jwt';
+        jwt = body['jwt'];
 
         _getJwtExpirationDate(response.headers['set-cookie']);
         return true;
