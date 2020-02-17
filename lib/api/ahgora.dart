@@ -148,6 +148,9 @@ class Ahgora {
       if (jsonRespose['error'] != null && jsonRespose['error'] == true) {
         print(
             'MyCERTI: Error when trying to read from ahgora: ${jsonRespose["message"]}');
+        if (jsonRespose["message"] == 'Acesso proibido') {
+          throw InexistentSession();
+        }
         return null;
       }
       MonthlyReport monthlyReport =
