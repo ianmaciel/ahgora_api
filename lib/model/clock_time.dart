@@ -27,6 +27,12 @@ import 'package:json_annotation/json_annotation.dart';
 /// file.
 part 'clock_time.g.dart';
 
+enum ClockTimeType {
+  regular,
+  manual,
+  expected,
+}
+
 /// An annotation for the code generator to know that this class needs the JSON
 /// serialization logic to be generated.
 @JsonSerializable()
@@ -50,16 +56,27 @@ class ClockTime {
   // The API will return a JSON like the following example:
   // {
   //  "hora":"09:03",
-  //  "tipo":"ORIGINAL"
+  //  "tipo":"ORIGINAL" // "ORIGINAL", "MANUAL", "PREVISTA"
   // }
 
   @JsonKey(name: 'hora', fromJson: _timeFromJson)
   DateTime time;
 
-  @JsonKey(name: 'tipo')
-  String type;
+  @JsonKey(name: 'tipo', fromJson: _typeFromJson)
+  ClockTimeType type;
 
   static DateTime _timeFromJson(String date) => DateFormat('HH:mm').parse(date);
+  static ClockTimeType _typeFromJson(String type) {
+    switch (type) {
+      case 'MANUAL':
+        return ClockTimeType.manual;
+      case 'PREVISTA':
+        return ClockTimeType.expected;
+      case 'ORIGINAL':
+      default:
+        return ClockTimeType.regular;
+    }
+  }
 
   /// A necessary factory constructor for creating a new User instance
   /// from a map. Pass the map to the generated `_$ClockTimeFromJson()` constructor.
