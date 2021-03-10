@@ -18,5 +18,5 @@ Map<String, dynamic> _$HourSummaryToJson(HourSummary instance) =>
     <String, dynamic>{
       'grupo': instance.group,
       'descricao': instance.description,
-      'valor': instance.value?.inMicroseconds,
+      'valor': instance.value.inMicroseconds,
     };

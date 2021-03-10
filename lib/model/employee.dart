@@ -65,22 +65,22 @@ class Employee {
   String id;
 
   @JsonKey(name: 'nome')
-  String name;
+  String name = '';
 
   @JsonKey(name: 'matricula')
-  String enrollment;
+  String enrollment = '';
 
   @JsonKey(name: 'pis')
-  String pis;
+  String pis = '';
 
   @JsonKey(name: 'admissao', fromJson: _admissionFromJson)
-  DateTime admission;
+  DateTime? admission;
 
   @JsonKey(name: 'cargo')
-  String role;
+  String role = '';
 
   @JsonKey(name: 'departamento')
-  String department;
+  String department = '';
 
   static DateTime _admissionFromJson(String date) =>
       DateFormat('yyyy-MM-dd').parse(date);

@@ -31,12 +31,11 @@ import 'package:ahgora_api/model/monthly_report.dart';
 
 class Ahgora {
   static const String _ahgoraAddress = 'https://www.ahgora.com.br';
-  int userId;
-  String password;
-  String companyId;
-  DateTime expirationDate;
-  String _rawJwt;
-  DateTime _expirationDate;
+  late int userId;
+  late String password;
+  late String companyId;
+  DateTime expirationDate = DateTime.now();
+  String _rawJwt = '';
   String get jwt => _rawJwt;
   set jwt(String value) {
     _rawJwt = value;
@@ -45,7 +44,8 @@ class Ahgora {
 
   String get _api => '$_ahgoraAddress/api-espelho/apuracao';
   String get _loginAddress => '$_ahgoraAddress/externo/login';
-  bool get isLoggedIn => jwt != null && jwt.isNotEmpty;
+  bool get jwtHasNotExpired => DateTime.now().isBefore(expirationDate);
+  bool get isLoggedIn => jwt.isNotEmpty && jwtHasNotExpired;
 
   final Map<String, String> _headers = <String, String>{
     'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
@@ -56,7 +56,7 @@ class Ahgora {
     this.password = password;
     this.companyId = companyId;
 
-    http.Response response = await http.post(_loginAddress,
+    http.Response response = await http.post(Uri.parse(_loginAddress),
         body:
             'empresa=$companyId&origin=portal&matricula=$userId&senha=$password',
         headers: _headers);
@@ -66,7 +66,11 @@ class Ahgora {
       if (body['r'] == 'success') {
         jwt = body['jwt'];
 
-        _parseJwtExpirationDate(response.headers['set-cookie']);
+        try {
+          _parseJwtExpirationDate(response.headers['set-cookie']!);
+        } catch (_) {
+          return false;
+        }
         return true;
       }
     }
@@ -141,24 +145,24 @@ class Ahgora {
 
   Future<MonthlyReport> _fetchMonthlyReport(String monthUrl) async {
     final http.Response response =
-        await http.get('$_api/$monthUrl', headers: _headers);
+        await http.get(Uri.parse('$_api/$monthUrl'), headers: _headers);
 
     if (response.body.isNotEmpty) {
       dynamic jsonRespose = json.decode(response.body);
-      if (jsonRespose['error'] != null && jsonRespose['error'] == true) {
+      if (jsonRespose['error'] != null && jsonRespose['error']! == true) {
         print(
             'MyCERTI: Error when trying to read from ahgora: ${jsonRespose["message"]}');
-        if (jsonRespose["message"] == 'Acesso proibido') {
+        if (jsonRespose['message'] == 'Acesso proibido') {
           throw InexistentSession();
         }
-        return null;
+        throw Exception("Couldn't fetch montlhy report");
       }
       MonthlyReport monthlyReport =
           MonthlyReport.fromJson(json.decode(response.body));
 
       return monthlyReport;
     } else {
-      return null;
+      throw Exception("Couldn't fetch montlhy report");
     }
   }
 }

@@ -11,14 +11,12 @@ Day _$DayFromJson(Map<String, dynamic> json) {
     Day._referenceFromJson(json['referencia'] as String),
     json['escala'] as String,
     json['jornada'] as String,
-    (json['batidas'] as List)
-        ?.map((e) =>
-            e == null ? null : ClockTime.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    (json['totais'] as List)
-        ?.map((e) =>
-            e == null ? null : HourSummary.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['batidas'] as List<dynamic>)
+        .map((e) => ClockTime.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    (json['totais'] as List<dynamic>)
+        .map((e) => HourSummary.fromJson(e as Map<String, dynamic>))
+        .toList(),
     json['afastamentos'] as int,
     json['estado'] as String,
   );
