@@ -23,7 +23,7 @@ Day _$DayFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$DayToJson(Day instance) => <String, dynamic>{
-      'referencia': instance.reference?.toIso8601String(),
+      'referencia': instance.reference.toIso8601String(),
       'escala': instance.schedule,
       'jornada': instance.workday,
       'batidas': instance.clockTimes,
