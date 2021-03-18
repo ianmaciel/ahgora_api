@@ -14,7 +14,7 @@ ClockTime _$ClockTimeFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$ClockTimeToJson(ClockTime instance) => <String, dynamic>{
-      'hora': instance.time?.toIso8601String(),
+      'hora': instance.time.toIso8601String(),
       'tipo': _$ClockTimeTypeEnumMap[instance.type],
     };
 
